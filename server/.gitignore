@@ -1,0 +1,22 @@
+# dependencies
+node_modules/
+dist/
+
+# Vercel
+.vercel/
+
+# local env
+.env
+.env.*
+!.env.example
+.env.*.local
+
+# uploaded media
+uploads/*
+!uploads/**/
+uploads/*/*
+!uploads/**/.gitkeep
+**/uploads/*
+!**/uploads/**/
+**/uploads/*/*
+!**/uploads/**/.gitkeep
