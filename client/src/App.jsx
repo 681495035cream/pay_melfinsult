@@ -130,44 +130,154 @@ function App() {
   return <Landing onSignIn={() => openAuth(false)} onRegister={() => openAuth(true)} />;
 }
 
+function ClockFace() {
+  const [time, setTime] = useState(() => {
+    const now = new Date();
+    const formatter = new Intl.DateTimeFormat("en-GB", {
+      timeZone: "Asia/Bangkok",
+      hour: "2-digit",
+      minute: "2-digit",
+      second: "2-digit",
+      hour12: false,
+    });
+
+    const parts = formatter.formatToParts(now);
+    const map = Object.fromEntries(parts.filter((part) => part.type !== "literal").map((part) => [part.type, part.value]));
+
+    return {
+      hour: Number(map.hour || 0),
+      minute: Number(map.minute || 0),
+      second: Number(map.second || 0),
+    };
+  });
+
+  useEffect(() => {
+    const tick = () => {
+      const now = new Date();
+      const formatter = new Intl.DateTimeFormat("en-GB", {
+        timeZone: "Asia/Bangkok",
+        hour: "2-digit",
+        minute: "2-digit",
+        second: "2-digit",
+        hour12: false,
+      });
+
+      const parts = formatter.formatToParts(now);
+      const map = Object.fromEntries(parts.filter((part) => part.type !== "literal").map((part) => [part.type, part.value]));
+
+      setTime({
+        hour: Number(map.hour || 0),
+        minute: Number(map.minute || 0),
+        second: Number(map.second || 0),
+      });
+    };
+
+    tick();
+    const timer = setInterval(tick, 1000);
+    return () => clearInterval(timer);
+  }, []);
+
+  const hourDegrees = ((time.hour % 12) + time.minute / 60 + time.second / 3600) * 30;
+  const minuteDegrees = (time.minute + time.second / 60) * 6;
+  const secondDegrees = time.second * 6;
+
+  return (
+    <div className="clock-shell" aria-label="Thailand time clock">
+      <div className="clock-face">
+        <div className="clock-center" />
+
+        {[12, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11].map((value) => {
+          const angle = ((value - 3) * Math.PI) / 6;
+          const radius = 32;
+          const x = 50 + (Math.cos(angle) * radius);
+          const y = 50 + (Math.sin(angle) * radius);
+
+          return (
+            <span
+              key={value}
+              className="clock-number"
+              style={{ left: `${x}%`, top: `${y}%` }}
+            >
+              {value}
+            </span>
+          );
+        })}
+
+        <div className="hand hour-hand" style={{ transform: `translateX(-50%) rotate(${hourDegrees}deg)` }} />
+        <div className="hand minute-hand" style={{ transform: `translateX(-50%) rotate(${minuteDegrees}deg)` }} />
+        <div className="hand second-hand" style={{ transform: `translateX(-50%) rotate(${secondDegrees}deg)` }} />
+      </div>
+      <div className="clock-bangkok">BKK</div>
+    </div>
+  );
+}
+
 function Landing({ onSignIn, onRegister }) {
   return (
-    <main className="min-h-screen bg-[#0d0d0c] text-[#f2eee7]">
-      <header className="flex items-center justify-between px-7 py-7 sm:px-12 lg:px-20">
-        <div className="text-lg font-semibold tracking-[0.2em]">LEXELLE</div>
-        <button type="button" onClick={onSignIn} className="rounded-full border border-[#c5a878] px-4 py-2 text-xs tracking-[0.18em] text-[#c5a878]">
+    <main className="landing-shell min-h-screen overflow-hidden bg-[#0d0d0c] text-[#f2eee7]">
+      <div className="landing-grid" />
+
+      <header className="relative z-10 flex items-center justify-between px-7 py-7 sm:px-12 lg:px-20">
+        <div className="brand-wordmark">LEXELLE</div>
+        <button type="button" onClick={onSignIn} className="nav-button rounded-full border border-[#c5a878]/60 bg-[#13110f]/60 px-4 py-2 text-[0.62rem] tracking-[0.22em] text-[#c5a878] backdrop-blur-sm transition hover:border-[#d9bc8a] hover:text-[#f5e7d0]">
           Sign in
         </button>
       </header>
 
-      <section className="mx-auto grid max-w-6xl gap-8 px-7 py-10 sm:px-12 lg:grid-cols-2 lg:px-20 lg:py-20">
-        <div>
-          <p className="text-xs tracking-[0.22em] text-[#c5a878]">LEXELLE LEGAL / EST. 2024</p>
-          <h1 className="mt-5 text-5xl font-semibold leading-none sm:text-7xl">
+      <section className="relative z-10 mx-auto grid max-w-6xl gap-12 px-7 py-8 sm:px-12 lg:grid-cols-[1.05fr_0.95fr] lg:px-20 lg:py-16">
+        <div className="flex flex-col justify-center">
+          <p className="eyebrow">LEXELLE LEGAL / EST. 2024</p>
+          <h1 className="display-title mt-5 text-5xl font-semibold leading-none sm:text-7xl">
             Make your case.
-            <span className="mt-3 block text-[#c5a878]">Know the law.</span>
+            <span className="mt-3 block text-[#c5a878]">
+              <em>Know the law.</em>
+            </span>
           </h1>
-          <p className="mt-6 max-w-md text-sm leading-7 text-[#b3aba1]">
+          <p className="mt-6 max-w-lg text-sm leading-7 text-[#b3aba1] sm:text-base">
             A sharper way to understand your rights, organize legal matters, and move forward with confidence.
           </p>
+
           <div className="mt-8 flex flex-wrap gap-4">
-            <button type="button" onClick={onRegister} className="rounded-full bg-[#c5a878] px-6 py-3 text-sm font-medium text-[#1a1714]">
+            <button type="button" onClick={onRegister} className="rounded-full bg-[#c5a878] px-6 py-3 text-sm font-medium text-[#1a1714] shadow-[0_18px_45px_rgba(197,168,120,0.35)] transition hover:-translate-y-0.5 hover:bg-[#d8bd8a]">
               Enter Lexelle
             </button>
-            <button type="button" onClick={onSignIn} className="text-sm text-[#c5a878] underline underline-offset-8">
+            <button type="button" onClick={onSignIn} className="text-sm font-medium text-[#c5a878] underline decoration-[#c5a878]/50 underline-offset-8 transition hover:text-[#f1d7a1]">
               I already have access
             </button>
           </div>
+
+          <div className="mt-10 flex flex-wrap gap-3 text-[0.62rem] tracking-[0.18em] text-[#c8bfa8] uppercase">
+            <span className="rounded-full border border-[#3d362d] bg-[#171614]/80 px-3 py-2">Private workspace</span>
+            <span className="rounded-full border border-[#3d362d] bg-[#171614]/80 px-3 py-2">Case tracking</span>
+            <span className="rounded-full border border-[#3d362d] bg-[#171614]/80 px-3 py-2">Legal insight</span>
+          </div>
         </div>
 
-        <div className="rounded-3xl border border-[#2f2d2a] bg-[#171614] p-8">
-          <div className="mb-6 text-xs tracking-[0.18em] text-[#b2aaa0]">LEGAL INTELLIGENCE</div>
-          <p className="text-2xl font-medium text-[#f2eee7]">Case workflow</p>
-          <ul className="mt-6 space-y-3 text-sm text-[#b3aba1]">
-            <li>• Track legal matters</li>
-            <li>• Review consultation notes</li>
-            <li>• Prepare next steps</li>
-          </ul>
+        <div className="relative flex items-center justify-center">
+          <div className="absolute inset-0 rounded-[2.5rem] bg-[radial-gradient(circle_at_center,_rgba(197,168,120,0.18),_transparent_55%)] blur-3xl" />
+          <div className="luxe-panel relative w-full max-w-xl rounded-[2rem] border border-[#36312d] bg-[#171614]/80 p-6 shadow-[0_30px_80px_rgba(0,0,0,0.45)] backdrop-blur-sm sm:p-8">
+            <div className="flex items-center justify-between">
+              <div className="text-[0.62rem] tracking-[0.22em] text-[#b7a58d] uppercase">Legal intelligence</div>
+              <span className="rounded-full border border-[#c5a878]/40 bg-[#1d1a17] px-2 py-1 text-[0.58rem] tracking-[0.18em] text-[#d7c29d]">LIVE</span>
+            </div>
+
+            <div className="mt-10 flex items-center justify-center">
+              <ClockFace />
+            </div>
+
+            <div className="mt-8 grid gap-4 sm:grid-cols-3">
+              {[
+                { label: "Open matters", value: "03" },
+                { label: "Consultations", value: "07" },
+                { label: "Case notes", value: "14" },
+              ].map((item) => (
+                <div key={item.label} className="rounded-2xl border border-[#312d28] bg-[#201d1b] p-4 text-center shadow-[inset_0_1px_0_rgba(255,255,255,0.02)]">
+                  <div className="text-[0.58rem] tracking-[0.16em] text-[#978d82] uppercase">{item.label}</div>
+                  <div className="mt-3 text-2xl font-semibold text-[#f0e6d8]">{item.value}</div>
+                </div>
+              ))}
+            </div>
+          </div>
         </div>
       </section>
     </main>
@@ -176,21 +286,22 @@ function Landing({ onSignIn, onRegister }) {
 
 function BrandPanel({ compact, onBack }) {
   return (
-    <section className="flex min-h-[42vh] flex-col justify-between bg-[#1d1a17] px-7 py-7 text-[#f3eee6] sm:px-12 sm:py-10 lg:min-h-screen lg:px-16 lg:py-16">
-      <div className="flex justify-between text-[.62rem] tracking-[.18em] text-[#b9aa96]">
+    <section className="relative flex min-h-[42vh] flex-col justify-between overflow-hidden bg-[#1d1a17] px-7 py-7 text-[#f3eee6] sm:px-12 sm:py-10 lg:min-h-screen lg:px-16 lg:py-16">
+      <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_left,_rgba(197,168,120,0.14),_transparent_30%),radial-gradient(circle_at_bottom_right,_rgba(197,168,120,0.1),_transparent_28%)]" />
+      <div className="relative z-10 flex justify-between text-[.62rem] tracking-[.18em] text-[#b9aa96]">
         <span>LEX / 01</span>
         <span>EST. 2024</span>
       </div>
 
       {compact && (
-        <button type="button" onClick={onBack} className="mt-10 self-start text-xs tracking-[.12em] text-[#c5a878]">
+        <button type="button" onClick={onBack} className="relative z-10 mt-10 self-start rounded-full border border-[#c5a878]/40 bg-[#1b1917]/50 px-3 py-2 text-[0.58rem] tracking-[.14em] text-[#c5a878] backdrop-blur-sm transition hover:border-[#d7b98e] hover:text-[#f4dfbb]">
           ← Back to overview
         </button>
       )}
 
-      <div className="my-auto py-10">
+      <div className="relative z-10 my-auto py-10">
         <p className="text-xs tracking-[0.22em] text-[#c8ad88]">LEXELLE LEGAL</p>
-        <h1 className="mt-3 max-w-md text-5xl font-semibold leading-[0.9] sm:text-6xl">
+        <h1 className="display-title mt-3 max-w-md text-5xl font-semibold leading-[0.82] sm:text-6xl">
           Know your
           <span className="block text-[#c8ad88]">rights.</span>
         </h1>
@@ -199,9 +310,9 @@ function BrandPanel({ compact, onBack }) {
         </p>
       </div>
 
-      <div className="flex justify-between text-[.62rem] tracking-[.18em] text-[#b9aa96]">
+      <div className="relative z-10 flex justify-between items-center text-[.62rem] tracking-[.18em] text-[#b9aa96]">
         <span>CLARITY. CONTROL. JUSTICE.</span>
-        <span className="text-base text-[#cbb18e]">✦</span>
+        <span className="rounded-full border border-[#c5a878]/40 bg-[#1b1917]/50 px-2 py-1 text-base text-[#cbb18e]">✦</span>
       </div>
     </section>
   );

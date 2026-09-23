@@ -10,7 +10,8 @@
 }
 
 * { box-sizing: border-box; }
-body { margin: 0; min-width: 320px; min-height: 100vh; }
+html { scroll-behavior: smooth; }
+body { margin: 0; min-width: 320px; min-height: 100vh; background: #0d0d0c; }
 button, input { font: inherit; }
 button { cursor: pointer; }
 button:disabled { cursor: wait; opacity: .6; }
@@ -30,9 +31,111 @@ button:disabled { cursor: wait; opacity: .6; }
 .brand-wordmark span { color: #c5a878; font-size: .55rem; vertical-align: top; }
 .nav-button { color: #c5a878; transition: color .2s ease; }
 .nav-button:hover { color: #f2eee7; }
-.landing-shell { position: relative; isolation: isolate; background: radial-gradient(circle at 80% 35%, rgba(116, 87, 44, .12), transparent 25%), #0d0d0c; }
-.landing-shell::before { position: absolute; inset: 6rem 8% 8%; border: 1px solid rgba(197, 168, 120, .16); content: ""; pointer-events: none; }
-.landing-grid { position: absolute; inset: 0; z-index: -1; opacity: .3; background: repeating-linear-gradient(90deg, transparent 0, transparent calc(20% - 1px), rgba(197, 168, 120, .08) 20%); pointer-events: none; }
-.legal-seal { display: grid; width: min(75vw, 22rem); height: min(75vw, 22rem); align-content: center; justify-items: center; gap: 1.3rem; border: 1px solid rgba(197, 168, 120, .58); border-radius: 50%; outline: 1px solid rgba(197, 168, 120, .2); outline-offset: 1rem; color: #a18a69; font-size: .58rem; letter-spacing: .28em; transform: rotate(-12deg); }
-.legal-seal strong { color: #c5a878; font: 8rem/ .7 "Cormorant Garamond", serif; font-weight: 400; }
-@media (max-width: 640px) { .landing-shell::before { inset: 5rem 1.5rem 2rem; } .legal-seal { width: 15rem; height: 15rem; } .legal-seal strong { font-size: 5rem; } }
+.landing-shell { position: relative; isolation: isolate; background: radial-gradient(circle at 80% 25%, rgba(180, 140, 86, 0.18), transparent 24%), radial-gradient(circle at 20% 80%, rgba(104, 82, 60, 0.16), transparent 24%), #0d0d0c; }
+.landing-shell::before { position: absolute; inset: 6rem 8% 8%; border: 1px solid rgba(197, 168, 120, .14); content: ""; pointer-events: none; border-radius: 2.4rem; }
+.landing-grid { position: absolute; inset: 0; z-index: 0; opacity: .3; background: repeating-linear-gradient(90deg, transparent 0, transparent calc(20% - 1px), rgba(197, 168, 120, .08) 20%); pointer-events: none; }
+.luxe-panel { position: relative; overflow: hidden; }
+.luxe-panel::before { position: absolute; inset: 1rem; border: 1px solid rgba(197, 168, 120, .18); border-radius: 1.5rem; content: ""; pointer-events: none; }
+.clock-shell {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: min(75vw, 22rem);
+  height: min(75vw, 22rem);
+  transform: rotate(0deg);
+}
+
+.clock-face {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  border: 10px solid #d6b15c;
+  background: radial-gradient(circle at 50% 35%, rgba(244, 216, 149, 0.2), rgba(12, 10, 8, 0.92) 48%, rgba(12, 10, 8, 1) 70%);
+  box-shadow: inset 0 0 0 4px rgba(255, 223, 147, 0.35), 0 0 0 2px rgba(197, 168, 120, 0.28), 0 22px 50px rgba(0,0,0,0.45);
+}
+
+.clock-face::before {
+  content: "";
+  position: absolute;
+  inset: 14px;
+  border-radius: 50%;
+  border: 2px solid rgba(244, 216, 149, 0.45);
+}
+
+.clock-number {
+  position: absolute;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 22px;
+  height: 22px;
+  margin-left: -11px;
+  margin-top: -11px;
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  color: #f3d89d;
+  text-shadow: 0 0 12px rgba(235, 200, 118, 0.3);
+}
+
+.hand {
+  position: absolute;
+  left: 50%;
+  bottom: 50%;
+  transform-origin: center bottom;
+  border-radius: 999px;
+  translate: -50% 0;
+}
+
+.hour-hand {
+  width: 6px;
+  height: 28%;
+  background: linear-gradient(to top, #f7d58c, #cda45f);
+  border-radius: 999px;
+  z-index: 3;
+}
+
+.minute-hand {
+  width: 4px;
+  height: 35%;
+  background: linear-gradient(to top, #f3d688, #b8862a);
+  z-index: 3;
+}
+
+.second-hand {
+  width: 2px;
+  height: 38%;
+  background: linear-gradient(to top, #f7e3a8, #d7a93a);
+  z-index: 4;
+}
+
+.clock-center {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background: #f2d691;
+  border: 3px solid #1d170f;
+  transform: translate(-50%, -50%);
+  z-index: 5;
+}
+
+.clock-bangkok {
+  position: absolute;
+  bottom: 18px;
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: 0.54rem;
+  letter-spacing: 0.34em;
+  color: #d7bc7c;
+  text-transform: uppercase;
+}
+
+@media (max-width: 640px) {
+  .landing-shell::before { inset: 4.5rem 1.25rem 1.25rem; }
+  .clock-shell { width: 15rem; height: 15rem; }
+}
