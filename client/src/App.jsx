@@ -291,17 +291,12 @@ function Landing({ onSignIn, onRegister }) {
               <ClockFace />
             </div>
 
-            <div className="mt-8 grid gap-4 sm:grid-cols-3">
-              {[
-                { label: "Open matters", value: "03" },
-                { label: "Consultations", value: "07" },
-                { label: "Case notes", value: "14" },
-              ].map((item) => (
-                <div key={item.label} className="rounded-2xl border border-[#312d28] bg-[#201d1b] p-4 text-center shadow-[inset_0_1px_0_rgba(255,255,255,0.02)]">
-                  <div className="text-[0.58rem] tracking-[0.16em] text-[#978d82] uppercase">{item.label}</div>
-                  <div className="mt-3 text-2xl font-semibold text-[#f0e6d8]">{item.value}</div>
-                </div>
-              ))}
+            <div className="mt-8 rounded-[1.5rem] border border-[#312d28] bg-[#201d1b] p-5 shadow-[inset_0_1px_0_rgba(255,255,255,0.02)]">
+              <div className="quote-label">Legal principle</div>
+              <blockquote className="quote-english mt-4">
+                “Laws and institutions are constantly tending to gravitate. Like clocks, they must be cleansed, and wound up, and set to true time.”
+              </blockquote>
+              <p className="quote-attribution mt-3">— Henry Ward Beecher</p>
             </div>
           </div>
         </div>
