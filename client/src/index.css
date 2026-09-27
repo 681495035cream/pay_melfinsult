@@ -28,7 +28,7 @@ button:disabled { cursor: wait; opacity: .6; }
 }
 .quote-english {
   font-family: "Cormorant Garamond", serif;
-  font-size: clamp(1.5rem, 1.7vw, 2.2rem);
+  font-size: clamp(1.3rem, 1.45vw, 1.9rem);
   line-height: 1.08;
   letter-spacing: 0.01em;
   font-style: italic;
@@ -36,7 +36,7 @@ button:disabled { cursor: wait; opacity: .6; }
 }
 .quote-attribution {
   font-family: "Cormorant Garamond", serif;
-  font-size: 0.72rem;
+  font-size: 0.68rem;
   letter-spacing: 0.18em;
   text-transform: uppercase;
   color: #978d82;
