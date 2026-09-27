@@ -10,10 +10,21 @@ const app = express();
 
 const allowedOrigins = (process.env.CLIENT_ORIGIN || "").split(",").map((item) => item.trim()).filter(Boolean);
 
+const isLocalhostOrigin = (origin) => {
+  if (!origin) return true;
+
+  try {
+    const { hostname } = new URL(origin);
+    return ["localhost", "127.0.0.1", "0.0.0.0"].includes(hostname) || hostname.endsWith(".localhost");
+  } catch {
+    return false;
+  }
+};
+
 app.use(
   cors({
     origin: (origin, callback) => {
-      if (!origin || !allowedOrigins.length || allowedOrigins.includes(origin)) {
+      if (!origin || !allowedOrigins.length || allowedOrigins.includes(origin) || isLocalhostOrigin(origin)) {
         callback(null, true);
         return;
       }
